@@ -1,0 +1,67 @@
+﻿using UnityEngine;
+using System.Collections;
+
+public class explosion : MonoBehaviour {
+
+    //number of seconds before explosion goes off
+    public float time = 5;
+    private GameObject heat;
+    private GameObject lavaFlow;
+    private GameObject lavaExplosion;
+    private GameObject cam;
+    private Vector3 camOrigin;
+
+	// Use this for initialization
+	void Start () {
+        heat = GameObject.Find("heat");
+        lavaFlow = GameObject.Find("lava flow");
+        lavaExplosion = GameObject.Find("lava explosion");
+        cam = GameObject.Find("Main Camera");
+        camOrigin = cam.gameObject.transform.position;
+
+        lavaFlow.gameObject.SetActive(false);
+        lavaExplosion.gameObject.SetActive(false);
+
+        StartCoroutine(SetExplosion(time));
+
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+	}
+
+    private IEnumerator SetExplosion(float time)
+    {
+        yield return new WaitForSeconds(time);
+        StartCoroutine(explodeVolcano());
+    }
+
+    private IEnumerator explodeVolcano()
+    {
+        StartCoroutine(shakeCam());
+        yield return new WaitForSeconds(2);
+        heat.gameObject.SetActive(false);
+        lavaFlow.gameObject.SetActive(true);
+        lavaExplosion.gameObject.SetActive(true);
+        yield return new WaitForSeconds(17); //2+17 = 19 seconds is roughly how long it takes to finish explosion
+        heat.gameObject.SetActive(true);
+        //volcano is now reset
+    }
+
+    private IEnumerator shakeCam()
+    {
+        for (int i = 0; i < 18; i++)
+        {
+            Vector3 newX1 = camOrigin + Vector3.right/4;
+            cam.gameObject.transform.position = newX1;
+            yield return new WaitForSeconds(0.05f);
+            Vector3 newX2 = camOrigin + Vector3.left/4;
+            cam.gameObject.transform.position = newX2;
+            yield return new WaitForSeconds(0.05f);
+        }
+         cam.gameObject.transform.position = camOrigin;
+    }
+
+}
