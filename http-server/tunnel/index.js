@@ -9,6 +9,11 @@ function connectionListener(connection) {
     const connectionIndex = connections.indexOf(connection);
     connections.splice(connectionIndex, 1);
   });
+  connection.on('error', (err) => {
+    console.log(err);
+    const connectionIndex = connections.indexOf(connection);
+    connections.splice(connectionIndex, 1);
+  });
 }
 
 export function broadcast(message) {
