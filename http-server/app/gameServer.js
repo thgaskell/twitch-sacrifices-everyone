@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { enqueueGoats, getNewGoats } from '../game/methods';
+import { getNewGoats } from '../game/methods';
 import GAME from './game';
-import PHASE from './game/phase'
+import PHASE from './game/phase';
 const router = Router();
 // GET ENDPOINTS START
 // place holder get for sanity
@@ -31,7 +31,7 @@ router.get('/game/start', (req, res) => {
 
 router.get('/game/:goats/vote', (req, res) => {
   const votes = GAME.votes;
-  votes.reduce((prev, curr) => {
+  const totalVotes = votes.reduce((prev, curr) => {
     const tally = prev[curr.vote];
     if (!tally) {
       prev[curr.vote] = 0;
@@ -39,7 +39,7 @@ router.get('/game/:goats/vote', (req, res) => {
     prev[curr.vote]++;
     return prev;
   }, {});
-  res.json();
+  res.json(totalVotes);
 });
 
 router.get('/game/reset', (req, res) => {
