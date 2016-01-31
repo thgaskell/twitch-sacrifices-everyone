@@ -12,8 +12,8 @@ public class ClientScript : MonoBehaviour {
     NetworkStream stream;
     StreamWriter writer;
     StreamReader reader;
-    String hostname = "localhost";
-    Int32 port = 8080;
+    String hostname = "192.168.1.122";
+    Int32 port = 3001;
 
     //http://answers.unity3d.com/questions/208309/get-request-wrapper.html
     public WWW GET(string url)
@@ -63,7 +63,8 @@ public class ClientScript : MonoBehaviour {
         }
         try
         {
-            return reader.ReadToEnd();
+            String line = reader.ReadLine();
+            return line;
         }
         catch (Exception e)
         {
