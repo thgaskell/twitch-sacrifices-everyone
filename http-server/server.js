@@ -6,7 +6,7 @@ import { connect } from './twitch';
 
 const app = express();
 app.use(auth);
-app.use(gameServer)
+app.use(gameServer);
 app.get('/', (req, res) => {
   res.send('hello world');
 });
