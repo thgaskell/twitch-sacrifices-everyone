@@ -9,6 +9,8 @@ public class explosion : MonoBehaviour {
     private GameObject lavaFlow;
     private GameObject lavaExplosion;
     private GameObject cam;
+    private GameObject leftgoat;
+    private GameObject rightgoat;
     private Vector3 camOrigin;
 
 	// Use this for initialization
@@ -17,6 +19,8 @@ public class explosion : MonoBehaviour {
         lavaFlow = GameObject.Find("lava flow");
         lavaExplosion = GameObject.Find("lava explosion");
         cam = GameObject.Find("Main Camera");
+        leftgoat = GameObject.Find("left goat");
+        rightgoat = GameObject.Find("right goat");
         camOrigin = cam.gameObject.transform.position;
 
         lavaFlow.gameObject.SetActive(false);
@@ -36,6 +40,11 @@ public class explosion : MonoBehaviour {
     {
         yield return new WaitForSeconds(time);
         StartCoroutine(explodeVolcano());
+        userAnim lganim = leftgoat.gameObject.GetComponent<userAnim>();
+        userAnim rganim = rightgoat.gameObject.GetComponent<userAnim>();
+        lganim.sacrifice = true;
+        rganim.sacrifice = true;
+
     }
 
     private IEnumerator explodeVolcano()
@@ -52,14 +61,14 @@ public class explosion : MonoBehaviour {
 
     private IEnumerator shakeCam()
     {
-        for (int i = 0; i < 18; i++)
+        for (int i = 0; i < 35; i++)
         {
             Vector3 newX1 = camOrigin + Vector3.right/4;
             cam.gameObject.transform.position = newX1;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.02f);
             Vector3 newX2 = camOrigin + Vector3.left/4;
             cam.gameObject.transform.position = newX2;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.02f);
         }
          cam.gameObject.transform.position = camOrigin;
     }

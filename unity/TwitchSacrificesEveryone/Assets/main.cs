@@ -21,5 +21,7 @@ public class main : MonoBehaviour {
         cs.writeSocket("test!");
         cs.closeSocket();
 	}
+
+    //need to make a simple state machine which keeps tab on the time and is able to reset the scene after a sacrifice has been made.
 	
 }
