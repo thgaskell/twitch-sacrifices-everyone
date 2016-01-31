@@ -30,8 +30,15 @@ router.get('/game/start', (req, res) => {
 });
 
 router.get('/game/:goats/vote', (req, res) => {
-  let votes = GAME.votes;
-  
+  const votes = GAME.votes;
+  votes.reduce((prev, curr) => {
+    const tally = prev[curr.vote];
+    if (!tally) {
+      prev[curr.vote] = 0;
+    }
+    prev[curr.vote]++;
+    return prev;
+  }, {});
   res.json();
 });
 
