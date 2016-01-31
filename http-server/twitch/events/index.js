@@ -2,6 +2,8 @@ import game from '../../game';
 import PHASE from '../../game/phase';
 import { enqueueGoats } from '../../game/methods';
 
+import { broadcast } from '../../tunnel';
+
 /**
  *  Events can be found at:
  *  https://node-irc.readthedocs.org/en/latest/API.html#events
@@ -22,10 +24,12 @@ export function onRegistered(message) {
  * @param  {String} text    The incoming user's message.
  * @param  {Object} message The raw IRC message.
  */
-export function onMessageChannel(nick, text, message) {
+export function onMessageChannel(nick, text) {
   switch (game.phase) {
     case PHASE.RESET:
       return enqueueGoats(nick);
+    case PHASE.START:
+      return broadcast(`${nick}:${text.trim()}`);
     default:
   }
 }
