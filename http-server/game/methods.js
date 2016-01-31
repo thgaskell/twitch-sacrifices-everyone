@@ -31,3 +31,13 @@ export function enqueueGoats(goat) {
   }
   return game.participants;
 }
+
+export function castVote(name, choice) {
+  const vote = game.votes.find((_vote) => _vote.name === name);
+  if (vote) {
+    vote.choice = choice;
+  } else {
+    game.votes.push({ name, choice });
+  }
+  return game.votes;
+}
