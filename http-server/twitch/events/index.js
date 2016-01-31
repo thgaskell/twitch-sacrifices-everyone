@@ -1,3 +1,7 @@
+import game from '../../game';
+import PHASE from '../../game/phase';
+import { enqueueGoats } from '../../game/methods';
+
 /**
  *  Events can be found at:
  *  https://node-irc.readthedocs.org/en/latest/API.html#events
@@ -19,9 +23,11 @@ export function onRegistered(message) {
  * @param  {Object} message The raw IRC message.
  */
 export function onMessageChannel(nick, text, message) {
-  console.log(nick);
-  console.log(text);
-  console.log(message);
+  switch (game.phase) {
+    case PHASE.RESET:
+      return enqueueGoats(nick);
+    default:
+  }
 }
 
 export function onError(message) {

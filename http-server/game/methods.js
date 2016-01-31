@@ -1,3 +1,5 @@
+import game from './index';
+
 export function resetVotes() {
   // import tony's methods and use them;
   // console.log('reset votes');
@@ -20,4 +22,12 @@ export function getNewGoats(participants, prevParticipants, newParticipants = []
   }
 
   return getNewGoats(participants, prevParticipants, newParticipants);
+}
+
+export function enqueueGoats(goat) {
+  const goatIndex = game.participants.indexOf(goat);
+  if (goatIndex === -1) {
+    game.participants.push(goat);
+  }
+  return game.participants;
 }
