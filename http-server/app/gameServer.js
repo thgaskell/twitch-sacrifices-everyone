@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { getNewGoats } from '../game/methods';
-import GAME from './game';
-import PHASE from './game/phase';
+import GAME from '../game';
+import PHASE from '../game/phase';
 const router = Router();
 // GET ENDPOINTS START
 // place holder get for sanity
