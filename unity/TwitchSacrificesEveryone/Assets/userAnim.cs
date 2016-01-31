@@ -56,12 +56,15 @@ public class userAnim : MonoBehaviour {
 
         while (sacrifice == true)
         {
-            if (chatbox) chatbox.transform.position = chatbox.gameObject.transform.position + Vector3.down / 80;
-            gameObject.transform.position = gameObject.transform.position + Vector3.down / 80;
+            if (chatbox) chatbox.transform.position = chatbox.gameObject.transform.position + Vector3.down / 180;
+            Rigidbody2D rg = gameObject.GetComponent<Rigidbody2D>();
+            rg.gravityScale = 2;
+            if (gameObject.name == "right goat") rg.AddForce(Vector2.left * 5);
+            else rg.AddForce(Vector2.right);
             yield return new WaitForSeconds(0.01f);
             num++;
 
-            if(num > 100)
+            if(num > 80)
             {
                 chatbox.gameObject.SetActive(false);
             }
