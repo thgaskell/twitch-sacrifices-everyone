@@ -13,6 +13,9 @@ public class explosion : MonoBehaviour {
     private GameObject rightgoat;
     private Vector3 camOrigin;
 
+    public bool explode = false;
+    
+
 	// Use this for initialization
 	void Start () {
         heat = GameObject.Find("heat");
@@ -26,7 +29,7 @@ public class explosion : MonoBehaviour {
         lavaFlow.gameObject.SetActive(false);
         lavaExplosion.gameObject.SetActive(false);
 
-        StartCoroutine(SetExplosion(time));
+       
 
 
 	}
@@ -34,22 +37,30 @@ public class explosion : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if(explode == true)
+        {
+            StartCoroutine(SetExplosion());
+        }
+
 	}
 
-    private IEnumerator SetExplosion(float time)
+    private IEnumerator SetExplosion()
     {
-        yield return new WaitForSeconds(time);
+ 
         
         userAnim lganim = leftgoat.gameObject.GetComponent<userAnim>();
         userAnim rganim = rightgoat.gameObject.GetComponent<userAnim>();
         lganim.sacrifice = true;
         rganim.sacrifice = true;
         StartCoroutine(explodeVolcano());
+        return null;
 
     }
 
     private IEnumerator explodeVolcano()
     {
+        GameObject chats = GameObject.Find("Goat Chat");
+        chats.SetActive(false);
         cam.gameObject.transform.position = cam.gameObject.transform.position + Vector3.forward*5;
         yield return new WaitForSeconds(2);
         StartCoroutine(shakeCam());

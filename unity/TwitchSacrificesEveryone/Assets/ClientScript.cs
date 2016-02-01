@@ -12,8 +12,11 @@ public class ClientScript : MonoBehaviour {
     NetworkStream stream;
     StreamWriter writer;
     StreamReader reader;
-    String hostname = "192.168.1.122";
-    Int32 port = 3001;
+    // String hostname = "192.168.1.122";
+    //  Int32 port = 3001;
+
+    String hostname = "192.168.1.124";
+      Int32 port = 3001;
 
     //http://answers.unity3d.com/questions/208309/get-request-wrapper.html
     public WWW GET(string url)
@@ -54,6 +57,13 @@ public class ClientScript : MonoBehaviour {
         }
     }
 
+    private void readComplete(IAsyncResult iar)
+    {
+        byte[] buffer = (byte[])iar.AsyncState;
+        int bytesAvailable = stream.EndRead(iar);
+        Debug.Log(bytesAvailable);
+    }
+
     public String readSocket()
     {
         if (!ready)
@@ -61,16 +71,24 @@ public class ClientScript : MonoBehaviour {
             Debug.Log("Socket not ready to read.");
             return null;
         }
-        try
-        {
-            String line = reader.ReadLine();
-            return line;
+        //    byte[] buffer = new byte[4096];
+        //   stream.BeginRead(buffer, 0, buffer.Length, readComplete, buffer);
+        try {
+            if (stream.DataAvailable)
+            {
+                String line = reader.ReadLine();
+                return line;
+            }
+            Debug.Log("Data not received.");
+            return null;
         }
         catch (Exception e)
         {
-            Debug.Log("Problem reading data: "+e);
+            Debug.Log("Caught Exception: "+e);
             return null;
         }
+          
+      //  return null;
     }
 
     public void writeSocket(string str)

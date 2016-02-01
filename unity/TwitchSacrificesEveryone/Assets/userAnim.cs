@@ -5,7 +5,6 @@ public class userAnim : MonoBehaviour {
 
     public bool sacrifice = false;
     public bool animDelay = false;
-    public GameObject chatbox;
     private int num = 0;
     private bool goUp = true;
     private bool run = false;
@@ -56,18 +55,13 @@ public class userAnim : MonoBehaviour {
 
         while (sacrifice == true)
         {
-            if (chatbox) chatbox.transform.position = chatbox.gameObject.transform.position + Vector3.down / 180;
+            
             Rigidbody2D rg = gameObject.GetComponent<Rigidbody2D>();
             rg.gravityScale = 2;
             if (gameObject.name == "right goat") rg.AddForce(Vector2.left * 5);
             else rg.AddForce(Vector2.right);
             yield return new WaitForSeconds(0.01f);
             num++;
-
-            if(num > 80)
-            {
-                chatbox.gameObject.SetActive(false);
-            }
 
             if(num > 1000)
             {
