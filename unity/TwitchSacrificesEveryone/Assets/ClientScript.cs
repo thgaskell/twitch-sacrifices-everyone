@@ -15,7 +15,7 @@ public class ClientScript : MonoBehaviour {
     // String hostname = "192.168.1.122";
     //  Int32 port = 3001;
 
-    String hostname = "192.168.1.124";
+    String hostname = "10.0.1.38";
       Int32 port = 3001;
 
     //http://answers.unity3d.com/questions/208309/get-request-wrapper.html

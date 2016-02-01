@@ -45,6 +45,8 @@ public class main: MonoBehaviour {
     public float timer = 180; //how many seconds to vote
     private Text timerText;
 
+    private bool gameMode = false;
+
 
     private GameObject volcano;
     public String httpserveraddr;
@@ -82,7 +84,7 @@ public class main: MonoBehaviour {
         cs.socketInit();
 
 
-        ArrayList allGods = new ArrayList() { "Evi Rubber Duck", "Killer Toast", "Sentient Hairpiece", "Nicolas Mage", "Potato", "L Shark", "R Shark", "Swirly Rock" }; ;
+        ArrayList allGods = new ArrayList() { "Evil Rubber Duck", "Killer Toast", "Sentient Hairpiece", "Nicolas Mage", "Potato", "L Shark", "R Shark", "Swirly Rock" }; ;
         gods = allGods;
 
 
@@ -92,14 +94,16 @@ public class main: MonoBehaviour {
     void FixedUpdate()
     {
         timer -= Time.deltaTime;
-        float timeRem = 180 + timer;
+        float timeRem = 120 + timer;
       
-        timerText.text = "Time Remaining: "+Math.Round(timeRem)+" Seconds";
+      if(gameMode != true)  timerText.text = "Time Remaining: "+Math.Round(timeRem)+" Seconds";
 
         socketRead();
 
-        if(timeRem <= 0)
+        if(timeRem <= 0 && gameMode == false)
         {
+            gameMode = true;
+            timerText.text = "";
             StartCoroutine(PlayGameEnd());
         }
     }
@@ -107,16 +111,16 @@ public class main: MonoBehaviour {
     private IEnumerator PlayGameEnd()
     {
        allowVotes = false;
-       cs.GET("192.168.1.124:27017/game/stop");
+       cs.GET("10.0.1.38:27017/game/stop");
 
         //ONCE TIMER REACHES ZERO, PLAY EXPLOTION ANIMATION. SACRIFICE THE USER(S) TO THE VOLCANO, REMOVE THE LOSING GOD AND SHOW THE WINNING ONE
         volcano.GetComponent<explosion>().explode = true;
-
+        Debug.Log("End game playing");
         //DISPLAY THE LEADERBOARD FOR WINNING GODS, AND HOW MANY VOTES (MAYBE COLLECTIVELY?)
-       
+        yield return new WaitForSeconds(30);
         //restart game at end
         startOver();
-        return null;
+        
 
     }
 
@@ -124,7 +128,7 @@ public class main: MonoBehaviour {
         //TELL THE SERVER THAT WE ARE GOING TO START A NEW ROUND BY LOOPING OVER AGAIN, BEGINNING WITH GOD SELECTION
 
         timer = 180;
-        cs.GET("192.168.1.124:27017/game/reset");
+        cs.GET("10.0.1.38:27017/game/reset");
         StartCoroutine(StartGameLoop());
     }
 
@@ -140,17 +144,21 @@ public class main: MonoBehaviour {
         //NEXT - GET THE TWO TWITCH USERS. IF NO RESPONSE FROM THE SERVER (OR WE HAVE NO PARTICIPANTS), LOOP UNTIL CONDITIONS ARE MET. DISPLAY RNGESUS WITH THE SELECTED NAMES
         while (goats == null) {
             goats = retrieveGoats();
-            yield return new WaitForSeconds(30);
+            //yield return new WaitForSeconds(30);
          
         }
-         
+
+       
+        //set the votes to begin counting
+      //  rngsus.SetActive(false);
+        allowVotes = true;
 
         //THEN - ASSIGN THE TWO USERS HANDLES TO THE TEXT SPACE ABOVE THE CHARACTERS, LINK THEIR CHAT TO THE TEXT BOX
         //yield return new WaitForSeconds(10);
-        setGoats(goats);
+        ///setGoats(goats);
         //BEGIN THE COUNTDOWN TIMER. RETRIEVE VOTES AND GOAT CHAT AND UPDATE THE GAME AS NECESSARY;
-        
-     
+
+        return null;
     }
     
     private void selectGods(ArrayList gods)
@@ -166,7 +174,7 @@ public class main: MonoBehaviour {
         godImageB.GetComponent<Image>().sprite = godimages[godselected2];
 
         leftgodvotes.text = gods[godselected] + ": 0";
-        leftgodvotes.text = gods[godselected2] + ": 0";
+        rightgodvotes.text = gods[godselected2] + ": 0";
 
         godA = gods[godselected]+"";
         godB = gods[godselected2]+"";
@@ -182,15 +190,20 @@ public class main: MonoBehaviour {
     {
 
 
-        WWW results = cs.GET("192.168.1.124:27017/game/start");
+        WWW results = cs.GET("10.0.1.38:27017/game/start");
         //split up results as given by server
-
+        Debug.Log("CHECKING");
         String names = results.text + "";
         Debug.Log(names);
-        if (names == "null") return null;
-        else
+
+        String[] name = names.Split(' ');
+
+        if (names == "")
         {
-            String[] name = names.Split(' ');
+            name[0] = "Test Goat 1";
+            name[1] = "Test Goat 2";
+        }
+        
 
 
             //assign goatA and goatB
@@ -198,26 +211,29 @@ public class main: MonoBehaviour {
             goatB.Add("name", name[1]);
             //display RNGsus and the chosen names
 
-            Text rngGoatA = GameObject.Find("left goat rng text").GetComponent<Text>();
-            Text rngGoatB = GameObject.Find("right goat rng text").GetComponent<Text>();
+           // Text rngGoatA = GameObject.Find("left goat rng text").GetComponent<Text>();
+           // Text rngGoatB = GameObject.Find("right goat rng text").GetComponent<Text>();
 
 
-            rngGoatA.text = (String)goatA["name"];
-            rngGoatB.text = (String)goatB["name"];
-            rngsus.SetActive(true);
-            return name;
-        }
+          //  rngGoatA.text = (String)goatA["name"];
+       //  rngGoatB.text = (String)goatB["name"];
+          leftgoatname.text = (String)goatA["name"];
+         rightgoatname.text = (String)goatB["name"];
+
+        leftgoatname.text = "TEST A";
+        rightgoatname.text = "TEST B";
+
+        // rngsus.SetActive(true);
+        return name;
+ 
 
     }
 
     private void setGoats(String[] name)
     {
+        Debug.Log(name[0]);
         //set their names in the game
-        leftgoatname.text = name[0];
-        rightgoatname.text = name[1];
-        //set the votes to begin counting
-        rngsus.SetActive(false);
-        allowVotes = true;
+      
 
     }
 
