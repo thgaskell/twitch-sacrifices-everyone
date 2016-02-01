@@ -3,12 +3,11 @@ import CONFIG from './config';
 import gameServer from './app/gameServer';
 import { connect } from './twitch';
 import tunnel from './tunnel';
+import morgan from 'morgan';
 
 const app = express();
-app.use(gameServer);
-app.get('/', (req, res) => {
-  res.send('hello world');
-});
+app.use(morgan('dev'))
+app.use('/', gameServer);
 
 function startHTTPServer() {
   const server = app.listen(CONFIG.PORT, () => {

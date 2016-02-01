@@ -1,6 +1,6 @@
 import game from '../../game';
 import PHASE from '../../game/phase';
-import { enqueueGoats } from '../../game/methods';
+import { enqueueGoats, castVote, parseChoice, tallyVotes } from '../../game/methods';
 
 import { broadcast } from '../../tunnel';
 
@@ -29,8 +29,23 @@ export function onMessageChannel(nick, text) {
     case PHASE.RESET:
       return enqueueGoats(nick);
     case PHASE.START:
+      const goatIndex = game.goats.indexOf(nick);
+      if (goatIndex < 0) {
+        const choice = parseChoice(text, game.goats);
+        if (choice) {
+          const votes = castVote(nick, choice);
+          const goatTally = tallyVotes(votes);
+          for (let goat in goatTally) {
+            if (goatTally.hasOwnProperty(goat)) {
+              broadcast(`!${goat}:${goatTally[goat]}`);
+            }
+          }
+        }
+        return;
+      }
       return broadcast(`${nick}:${text.trim()}`);
     default:
+     return;
   }
 }
 

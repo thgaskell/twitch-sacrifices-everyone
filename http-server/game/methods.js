@@ -2,7 +2,6 @@ import game from './index';
 
 export function resetVotes() {
   // import tony's methods and use them;
-  // console.log('reset votes');
 }
 
 export function getNewGoats(participants, prevParticipants, newParticipants = []) {
@@ -27,7 +26,7 @@ export function getNewGoats(participants, prevParticipants, newParticipants = []
 export function enqueueGoats(goat) {
   const goatIndex = game.participants.indexOf(goat);
   if (goatIndex === -1) {
-    game.participants.push(goat);
+    game.participants.push(goat.toLowerCase());
   }
   return game.participants;
 }
@@ -40,4 +39,25 @@ export function castVote(name, choice) {
     game.votes.push({ name, choice });
   }
   return game.votes;
+}
+
+export function tallyVotes(votes) {
+  return votes.reduce((prev, curr) => {
+    const tally = prev[curr.choice];
+    if (!tally) {
+      prev[curr.choice] = 0;
+    }
+    prev[curr.choice]++;
+    return prev;
+  }, {});
+}
+
+export function parseChoice(msg, goats) {
+  msg = msg.toLowerCase().trim();
+  msg = msg.split(/\s+/);
+  const choice = msg[0];
+  if (goats.indexOf(choice) > -1) {
+    return choice;
+  }
+  return null;
 }
