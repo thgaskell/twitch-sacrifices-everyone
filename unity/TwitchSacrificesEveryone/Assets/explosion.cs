@@ -39,16 +39,19 @@ public class explosion : MonoBehaviour {
     private IEnumerator SetExplosion(float time)
     {
         yield return new WaitForSeconds(time);
-        StartCoroutine(explodeVolcano());
+        
         userAnim lganim = leftgoat.gameObject.GetComponent<userAnim>();
         userAnim rganim = rightgoat.gameObject.GetComponent<userAnim>();
         lganim.sacrifice = true;
         rganim.sacrifice = true;
+        StartCoroutine(explodeVolcano());
 
     }
 
     private IEnumerator explodeVolcano()
     {
+        cam.gameObject.transform.position = cam.gameObject.transform.position + Vector3.forward*5;
+        yield return new WaitForSeconds(2);
         StartCoroutine(shakeCam());
         yield return new WaitForSeconds(2);
         heat.gameObject.SetActive(false);
